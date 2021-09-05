@@ -1,0 +1,40 @@
+package(default_visibility = ["//visibility:private"])
+
+# load(
+#     "@com_google_absl//absl:copts/configure_copts.bzl",
+#     "ABSL_DEFAULT_COPTS",
+#     "ABSL_TEST_COPTS",
+# )
+
+cc_library(
+    name = "source_location",
+    srcs = ["source_location.cc"],
+    hdrs = ["source_location.h"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_google_absl//absl/strings:str_format",
+    ],
+)
+
+cc_library(
+    name = "log",
+    hdrs = ["log.h"],
+    # copts = ABSL_DEFAULT_COPTS,
+    visibility = ["//visibility:public"],
+    deps = [
+        ":source_location",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/time",
+    ],
+)
+
+cc_test(
+    name = "log_test",
+    srcs = ["log_test.cc"],
+    # copts = ABSL_TEST_COPTS,
+    deps = [
+        ":log",
+        "@com_google_absl//absl/strings",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
