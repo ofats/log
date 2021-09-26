@@ -63,10 +63,9 @@ auto MakeLogAdapter(F&& f) -> LogAdapter<F> {
 struct LogToStd {
   template <typename... S>
   void operator()(const S&... s) const {
-    sink << absl::StrCat(
-                absl::FormatTime("%F %T %Z", absl::Now(), absl::UTCTimeZone()),
-                " ", loc.file_name(), ":", loc.function_name(),
-                "():", loc.line(), " ", s...)
+    sink << absl::StrCat(absl::FormatTime(absl::Now(), absl::UTCTimeZone()),
+                         " ", loc.file_name(), ":", loc.function_name(),
+                         "():", loc.line(), " ", s...)
          << std::endl;
   }
 
@@ -74,7 +73,7 @@ struct LogToStd {
   SourceLocation loc;
 };
 
-auto MakeStdoutLog(SourceLocation loc = {})
+inline auto MakeStdoutLog(SourceLocation loc = {})
     -> decltype(MakeLogAdapter(std::declval<LogToStd>())) {
   return MakeLogAdapter(LogToStd{
       .sink = std::cout,
@@ -82,7 +81,7 @@ auto MakeStdoutLog(SourceLocation loc = {})
   });
 }
 
-auto MakeStderrLog(SourceLocation loc = {})
+inline auto MakeStderrLog(SourceLocation loc = {})
     -> decltype(MakeLogAdapter(std::declval<LogToStd>())) {
   return MakeLogAdapter(LogToStd{
       .sink = std::cerr,
